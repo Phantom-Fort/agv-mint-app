@@ -38,3 +38,59 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+|-- .gitignore
+|-- components.json
+|-- jest.setup.js
+|-- next.config.js
+|-- package-lock.json
+|-- package.json
+|-- postcss.config.js
+|-- README.md
+|-- tailwind.config.js
+|-- public
+  |-- favicon.ico
+  |-- index.html
+  |-- logo.svg
+  |-- manifest.json
+|-- app
+  |-- Layout.jsx
+  |-- Page.jsx
+  |-- context
+    |-- AppContext.js
+  |-- config
+    |-- chains.js
+    |-- contracts.js
+    |-- pricing.js
+  |-- components
+    |-- ActivityLog.jsx
+    |-- ChainSelector.jsx
+    |-- LoadingSpinner.jsx
+    |-- MerkleProofGenerator.jsx
+    |-- MintButton.jsx
+    |-- PassSelector.jsx
+    |-- QuantityInput.jsx
+    |-- StatusBadge.jsx
+    |-- TransactionStatus.jsx
+    |-- WalletConnect.jsx
+  |-- hooks
+    |-- useChainSwitch.js
+    |-- useContractValidation.js
+    |-- useLogger.js
+    |-- useMinting.js
+    |-- useThirdweb.js
+    |-- useTransactionHistory.js
+    |-- useWallet.js
+  |-- kol-dashboard
+    |-- page.jsx
+  |-- minter-dashboard
+    |-- page.jsx
+  |-- pages
+    |-- index.jsx
+  |-- styles
+    |-- components.css
+    |-- globals.css
+  |-- utils
+    |-- formatters.js
+    |-- logger.js
+    |-- validator.js

@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* WalletConnect Component */
+  .wallet-connect {
+    @apply flex items-center gap-3;
+  }
+  .wallet-connect-btn {
+    @apply btn-primary w-full md:w-auto;
+  }
+  .wallet-address {
+    @apply text-sm text-gray-600 font-mono truncate max-w-[150px];
+  }
+
+  /* ChainSelector Component */
+  .chain-selector {
+    @apply relative;
+  }
+  .chain-selector select {
+    @apply input-field appearance-none pr-8;
+  }
+  .chain-selector::after {
+    @apply absolute right-3 top-1/2 -translate-y-1/2 text-gray-500;
+    content: '▼';
+  }
+
+  /* PassSelector Component */
+  .pass-selector {
+    @apply grid grid-cols-2 gap-4 md:grid-cols-4;
+  }
+  .pass-card {
+    @apply border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-primary-50 transition-colors;
+  }
+  .pass-card.selected {
+    @apply border-primary-500 bg-primary-100;
+  }
+  .pass-title {
+    @apply text-sm font-semibold text-gray-900;
+  }
+  .pass-description {
+    @apply text-xs text-gray-500;
+  }
+  .pass-price {
+    @apply text-sm font-medium text-primary-600;
+  }
+
+  /* QuantityInput Component */
+  .quantity-input {
+    @apply flex items-center gap-2;
+  }
+  .quantity-input input {
+    @apply input-field w-24 text-center;
+  }
+  .quantity-btn {
+    @apply px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors;
+  }
+
+  /* MintButton Component */
+  .mint-button {
+    @apply btn-primary w-full;
+  }
+  .mint-button:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* ActivityLog Component */
+  .activity-log {
+    @apply space-y-2 max-h-[400px] overflow-y-auto;
+  }
+  .log-item {
+    @apply flex items-start gap-2 text-sm;
+  }
+  .log-timestamp {
+    @apply text-gray-400 font-mono text-xs;
+  }
+
+  /* StatusBadge Component */
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  .status-badge.chain {
+    @apply bg-primary-100 text-primary-800;
+  }
+  .status-badge.special {
+    @apply bg-green-100 text-green-800;
+  }
+}

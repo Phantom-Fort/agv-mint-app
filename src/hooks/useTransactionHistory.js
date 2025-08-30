@@ -1,40 +1,21 @@
-import { useState, useCallback } from 'react';
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 export function useTransactionHistory() {
-  const [transactions, setTransactions] = useState([]);
+  const { state, dispatch } = useContext(AppContext);
 
-  const addTransaction = useCallback((txData) => {
-    const transaction = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      hash: txData.hash,
-      status: 'pending',
-      chain: txData.chain,
-      pass: txData.pass,
-      quantity: txData.quantity,
-      price: txData.price
-    };
+  const addTransaction = (tx) =>
+    dispatch({ type: "ADD_TX", payload: { ...tx, id: Date.now() } });
 
-    setTransactions(prev => [transaction, ...prev]);
-    return transaction.id;
-  }, []);
+  const updateTransactionStatus = (id, status) =>
+    dispatch({ type: "UPDATE_TX", payload: { id, status } });
 
-  const updateTransactionStatus = useCallback((id, status, receipt = null) => {
-    setTransactions(prev => prev.map(tx => 
-      tx.id === id 
-        ? { ...tx, status, receipt, updatedAt: new Date().toISOString() }
-        : tx
-    ));
-  }, []);
-
-  const clearHistory = useCallback(() => {
-    setTransactions([]);
-  }, []);
+  const clearHistory = () => dispatch({ type: "CLEAR_TX" });
 
   return {
-    transactions,
+    transactions: state.transactions || [],
     addTransaction,
     updateTransactionStatus,
-    clearHistory
+    clearHistory,
   };
 }

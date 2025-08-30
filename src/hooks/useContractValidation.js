@@ -1,53 +1,35 @@
-import { useEffect, useState } from 'react';
-import { NFT_CONTRACTS, USDT_ADDRESSES } from '../config/contracts';
-import { PASS_PRICES } from '../config/pricing';
-import { useApp } from '../context/AppContext';
+import { useEffect } from "react";
+import { useLogger } from "./useLogger";
 
-export function useContractValidation() {
-  const { state } = useApp();
-  const [validation, setValidation] = useState({
-    isValid: false,
-    contractAddress: null,
-    usdtAddress: null,
-    price: null,
-    errors: []
-  });
+export function useContractValidation(state) {
+  const { addLog } = useLogger();
 
   useEffect(() => {
-    const { selectedChain, selectedPass, quantity } = state;
-    const errors = [];
-
-    // Validate contract address
-    const contractAddress = NFT_CONTRACTS[selectedPass]?.[selectedChain];
-    if (!contractAddress || contractAddress === "0x...") {
-      errors.push(`${selectedPass} pass not available on chain ${selectedChain}`);
+    if (!state.contract) {
+      addLog("Contract not loaded", "error");
+      return;
     }
 
-    // Validate USDT address
-    const usdtAddress = USDT_ADDRESSES[selectedChain];
-    if (!usdtAddress) {
-      errors.push(`USDT not supported on chain ${selectedChain}`);
+    if (!state.usdtContract) {
+      addLog("USDT contract not loaded", "error");
+      return;
     }
 
-    // Validate price
-    const price = PASS_PRICES[selectedPass];
-    if (!price) {
-      errors.push(`Invalid pass type: ${selectedPass}`);
+    if (!state.passType) {
+      addLog("No pass type selected", "error");
+      return;
     }
 
-    // Validate quantity
-    if (quantity < 1 || quantity > 5) {
-      errors.push('Quantity must be between 1 and 5');
+    if (state.quantity < 1) {
+      addLog("Quantity must be at least 1", "error");
+      return;
     }
 
-    setValidation({
-      isValid: errors.length === 0,
-      contractAddress,
-      usdtAddress,
-      price,
-      errors
-    });
-  }, [state]);
+    if (state.quantity > 5) {
+      addLog("Quantity cannot exceed 5", "error");
+      return;
+    }
 
-  return validation;
+    addLog("Contract validation passed", "success");
+  }, [state, addLog]);
 }

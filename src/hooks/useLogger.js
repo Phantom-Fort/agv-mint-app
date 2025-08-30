@@ -1,16 +1,20 @@
-import { useApp } from '../context/AppContext';
-import { useCallback } from 'react';
+import { useCallback, useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 export function useLogger() {
-  const { dispatch } = useApp();
+  const { dispatch } = useContext(AppContext);
 
-  const addLog = useCallback((message, type = 'info') => {
-    const timestamp = new Date().toLocaleTimeString();
-    dispatch({
-      type: 'ADD_LOG',
-      payload: { timestamp, message, type }
-    });
-    console.log(`[${type.toUpperCase()}] ${message}`);
+  const addLog = useCallback((message, type = "info") => {
+    const log = {
+      id: Date.now(),
+      message,
+      type,
+      timestamp: new Date().toISOString(),
+    };
+
+    console.log(`[${type.toUpperCase()}]`, message);
+    dispatch({ type: "ADD_LOG", payload: log });
+    return log;
   }, [dispatch]);
 
   return { addLog };

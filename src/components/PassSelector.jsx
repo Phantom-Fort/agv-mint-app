@@ -1,25 +1,17 @@
-import React from 'react';
-import { useApp } from '../context/AppContext';
-import { useContractValidation } from '../hooks/useContractValidation';
-import { PASS_DETAILS, PASS_PRICES } from '../config/pricing';
+// src/components/PassSelector.jsx
+import React from "react";
+import * as Select from "@radix-ui/react-select";
+import { useApp } from "../context/AppContext";
+import { useContractValidation } from "../hooks/useContractValidation";
+import { PASS_DETAILS, PASS_PRICES } from "../config/pricing";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 const PassSelector = () => {
   const { state, dispatch } = useApp();
   const validation = useContractValidation();
 
-  const handlePassChange = (e) => {
-    dispatch({ type: 'SET_PASS', payload: e.target.value });
-  };
-
-  const getPassStatus = (passType) => {
-    const contractAddress = validation.contractAddress;
-    if (state.selectedPass === passType) {
-      if (!contractAddress || contractAddress === "0x...") {
-        return 'unavailable';
-      }
-      return 'available';
-    }
-    return 'default';
+  const handlePassChange = (passType) => {
+    dispatch({ type: "SET_PASS", payload: passType });
   };
 
   return (
@@ -27,29 +19,48 @@ const PassSelector = () => {
       <label className="block text-sm font-medium text-gray-700">
         Pass Type
       </label>
-      
-      <div className="relative">
-        <select 
-          value={state.selectedPass}
-          onChange={handlePassChange}
-          className="input-field appearance-none pr-10"
-        >
-          {Object.entries(PASS_DETAILS).map(([passKey, passInfo]) => {
-            const price = PASS_PRICES[passKey];
-            return (
-              <option key={passKey} value={passKey}>
-                {passInfo.name} (${price?.usd || 'N/A'})
-              </option>
-            );
-          })}
-        </select>
-        
-        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-      </div>
+
+      <Select.Root
+        value={state.selectedPass}
+        onValueChange={handlePassChange}
+      >
+        <Select.Trigger className="inline-flex items-center justify-between w-full px-3 py-2 text-sm bg-white border rounded-lg shadow-sm focus:outline-none">
+          <Select.Value placeholder="Select a pass" />
+          <Select.Icon>
+            <ChevronDownIcon className="w-4 h-4 text-gray-500" />
+          </Select.Icon>
+        </Select.Trigger>
+
+        <Select.Portal>
+          <Select.Content className="overflow-hidden bg-white rounded-lg shadow-lg">
+            <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-gray-50">
+              <ChevronUpIcon />
+            </Select.ScrollUpButton>
+            <Select.Viewport className="p-2">
+              {Object.entries(PASS_DETAILS).map(([passKey, passInfo]) => {
+                const price = PASS_PRICES[passKey];
+                return (
+                  <Select.Item
+                    key={passKey}
+                    value={passKey}
+                    className="flex items-center px-2 py-1.5 text-sm rounded cursor-pointer hover:bg-gray-100"
+                  >
+                    <Select.ItemText>
+                      {passInfo.name} (${price?.usd || "N/A"})
+                    </Select.ItemText>
+                    <Select.ItemIndicator className="ml-auto">
+                      <CheckIcon className="w-4 h-4 text-blue-600" />
+                    </Select.ItemIndicator>
+                  </Select.Item>
+                );
+              })}
+            </Select.Viewport>
+            <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-gray-50">
+              <ChevronDownIcon />
+            </Select.ScrollDownButton>
+          </Select.Content>
+        </Select.Portal>
+      </Select.Root>
 
       {/* Pass Details */}
       <div className="p-3 bg-gray-50 rounded-lg">
@@ -61,34 +72,19 @@ const PassSelector = () => {
             ${PASS_PRICES[state.selectedPass]?.usd}
           </span>
         </div>
-        
         <p className="text-sm text-gray-600 mb-2">
           {PASS_DETAILS[state.selectedPass]?.description}
         </p>
-        
-        {/* Availability Status */}
-        <div className="flex items-center space-x-2">
-          {getPassStatus(state.selectedPass) === 'available' && (
-            <>
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-xs text-green-600">Available on this chain</span>
-            </>
-          )}
-          
-          {getPassStatus(state.selectedPass) === 'unavailable' && (
-            <>
-              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-              <span className="text-xs text-red-600">Not available on this chain</span>
-            </>
-          )}
-        </div>
       </div>
-      
+
       {/* Validation Errors */}
       {validation.errors.length > 0 && (
         <div className="text-xs text-red-600 space-y-1">
           {validation.errors.map((error, index) => (
-            <div key={index}>⚠️ {error}</div>
+            <div key={index}><img
+                    src="https://img.icons8.com/?size=100&id=360&format=png&color=000000"
+                    alt="error icon"
+                  /> {error}</div>
           ))}
         </div>
       )}
